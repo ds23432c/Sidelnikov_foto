@@ -76,6 +76,7 @@
               {% if user.role == 'admin' or user.is_staff %}
                 <li><hr class="dropdown-divider" style="border-color:var(--border)"></li>
                 <li><a class="dropdown-item" href="/admin-panel/" style="color:var(--accent)"><i class="bi bi-shield me-2"></i>Администрирование</a></li>
+                <li><a class="dropdown-item" href="/django-admin/" style="color:var(--accent)"><i class="bi bi-gear me-2"></i>Django admin</a></li>
               {% endif %}
               <li><hr class="dropdown-divider" style="border-color:var(--border)"></li>
               <li><a class="dropdown-item" href="/accounts/logout/" style="color:#e74c3c"><i class="bi bi-box-arrow-right me-2"></i>Выйти</a></li>
