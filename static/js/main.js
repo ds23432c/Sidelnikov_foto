@@ -180,67 +180,68 @@ if (markAllBtn) {
 window.initProfileMap = function(lat, lng) {
   const mapEl = document.getElementById('profile-map-picker');
   if (!mapEl) return;
-  const initLat = lat || 55.7558;
-  const initLng = lng || 37.6173;
-  const map = L.map('profile-map-picker').setView([initLat, initLng], lat ? 10 : 5);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-  }).addTo(map);
-  let marker = null;
-  if (lat && lng) {
-    marker = L.marker([lat, lng]).addTo(map);
-  }
-  map.on('click', e => {
-    const { lat, lng } = e.latlng;
-    document.getElementById('id_latitude').value = lat.toFixed(6);
-    document.getElementById('id_longitude').value = lng.toFixed(6);
-    if (marker) marker.setLatLng([lat, lng]);
-    else marker = L.marker([lat, lng]).addTo(map);
-  });
+
+  const initLat = Number.isFinite(lat) ? lat : 55.7558;
+  const initLng = Number.isFinite(lng) ? lng : 37.6173;
+  const zoom = lat && lng ? 10 : 5;
+  const marker = `pm2rdm1`;
+  const mapUrl = `https://static-maps.yandex.ru/1.x/?lang=ru_RU&l=map&size=650,300&ll=${initLng.toFixed(6)},${initLat.toFixed(6)}&z=${zoom}&pt=${initLng.toFixed(6)},${initLat.toFixed(6)},${marker}`;
+
+  mapEl.innerHTML = `<img src="${mapUrl}" alt="Яндекс карта профиля" style="width:100%;display:block;border-radius:12px;border:1px solid var(--border);background:var(--bg2)">`;
 };
 
 // ====== Карта создателей ======
 window.initCreatorsMap = function() {
   const mapEl = document.getElementById('map');
   if (!mapEl) return;
-  const map = L.map('map').setView([60, 55], 4);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-  }).addTo(map);
 
   const typeFilter = document.getElementById('type-filter');
+  const fallbackCenter = { lat: 55.751244, lng: 37.618423 };
+
+  function buildMapUrl(creators) {
+    const center = creators.length
+      ? creators.reduce((acc, creator) => ({
+          lat: acc.lat + Number(creator.lat || 0),
+          lng: acc.lng + Number(creator.lng || 0),
+        }), { lat: 0, lng: 0 })
+      : fallbackCenter;
+
+    if (creators.length) {
+      center.lat /= creators.length;
+      center.lng /= creators.length;
+    }
+
+    const zoom = creators.length > 6 ? 3 : creators.length > 3 ? 4 : 5;
+    const points = creators.map((creator, index) => {
+      const markerType = `pm2rdm${(index % 9) + 1}`;
+      return `${Number(creator.lng).toFixed(6)},${Number(creator.lat).toFixed(6)},${markerType}`;
+    }).join('~');
+
+    const baseUrl = 'https://static-maps.yandex.ru/1.x/?lang=ru_RU&l=map&size=650,450';
+    const ll = `&ll=${center.lng.toFixed(6)},${center.lat.toFixed(6)}`;
+    const z = `&z=${zoom}`;
+    const pt = points ? `&pt=${points}` : '';
+    return `${baseUrl}${ll}${z}${pt}`;
+  }
+
+  function renderMap(creators) {
+    const mapUrl = buildMapUrl(creators);
+    mapEl.innerHTML = `<img src="${mapUrl}" alt="Яндекс карта специалистов" style="width:100%;display:block;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg2)">`;
+  }
 
   function loadCreators() {
     const type = typeFilter ? typeFilter.value : '';
     let url = '/map/api/creators/';
     if (type) url += '?type=' + type;
-    fetch(url).then(r => r.json()).then(data => {
-      map.eachLayer(l => { if (l instanceof L.Marker) map.removeLayer(l); });
-      data.creators.forEach(c => {
-        const icon = L.divIcon({
-          className: '',
-          html: `<div style="width:40px;height:40px;border-radius:50%;border:2px solid #F5A623;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.5)">
-                   ${c.avatar ? `<img src="${c.avatar}" style="width:100%;height:100%;object-fit:cover">` : '<div style="width:100%;height:100%;background:#1C1C1C;display:flex;align-items:center;justify-content:center;color:#888">👤</div>'}
-                 </div>`,
-          iconSize: [40, 40],
-          iconAnchor: [20, 20],
-        });
-        const marker = L.marker([c.lat, c.lng], { icon }).addTo(map);
-        marker.bindPopup(`
-          <div style="min-width:180px;color:#F0F0F0">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-              ${c.avatar ? `<img src="${c.avatar}" style="width:44px;height:44px;border-radius:50%;object-fit:cover">` : ''}
-              <div>
-                <strong style="display:block">${c.name}</strong>
-                <span style="color:#F5A623;font-size:0.8rem">${c.creator_type}</span>
-              </div>
-            </div>
-            <div style="color:#888;font-size:0.8rem;margin-bottom:8px">${c.city}${c.specialization ? ' · ' + c.specialization : ''}</div>
-            <a href="${c.url}" style="color:#F5A623;font-size:0.85rem">Открыть профиль →</a>
-          </div>
-        `);
+
+    fetch(url)
+      .then(r => r.json())
+      .then(data => {
+        renderMap(Array.isArray(data.creators) ? data.creators : []);
+      })
+      .catch(() => {
+        mapEl.innerHTML = '<div class="card p-4 text-center" style="border:1px solid var(--border)">Карта временно недоступна</div>';
       });
-    });
   }
 
   loadCreators();

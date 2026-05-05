@@ -5,6 +5,8 @@ from apps.orders.models import ServiceOffer, OrderRequest
 from apps.notifications.models import Notification
 
 
+PHOTO_PLACEHOLDER_URL = '/static/placeholders/photo-placeholder.svg'
+
 CREATORS = [
     {
         'username': 'anna_foto', 'first_name': 'Анна', 'last_name': 'Волкова',
@@ -13,7 +15,7 @@ CREATORS = [
         'bio': 'Свадебный и портретный фотограф с 8-летним опытом. Люблю живые эмоции и мягкий свет.',
         'specialization': 'Свадебная и портретная фотография',
         'instagram': 'anna_photo_msk', 'telegram': 'anna_foto',
-        'avatar_url': 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop',
+        'avatar_url': PHOTO_PLACEHOLDER_URL,
     },
     {
         'username': 'pavel_lens', 'first_name': 'Павел', 'last_name': 'Сидельников',
@@ -22,7 +24,7 @@ CREATORS = [
         'bio': 'Документальный и пейзажный фотограф. Путешествую и снимаю красоту мира.',
         'specialization': 'Пейзаж, документальная фотография',
         'instagram': 'pavel_lens', 'telegram': 'pavel_lens',
-        'avatar_url': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop',
+        'avatar_url': PHOTO_PLACEHOLDER_URL,
     },
     {
         'username': 'ekaterina_design', 'first_name': 'Екатерина', 'last_name': 'Морозова',
@@ -31,7 +33,7 @@ CREATORS = [
         'bio': 'Графический дизайнер, специализируюсь на брендинге и айдентике для малого бизнеса.',
         'specialization': 'Брендинг, айдентика, логотипы',
         'instagram': 'kate_design_ru', 'telegram': 'kate_design',
-        'avatar_url': 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop',
+        'avatar_url': PHOTO_PLACEHOLDER_URL,
     },
     {
         'username': 'igor_photo', 'first_name': 'Игорь', 'last_name': 'Петров',
@@ -40,7 +42,7 @@ CREATORS = [
         'bio': 'Коммерческий фотограф. Предметная съёмка, реклама, корпоративные мероприятия.',
         'specialization': 'Коммерческая и предметная съёмка',
         'instagram': 'igor_commercial', 'telegram': 'igor_photo',
-        'avatar_url': 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop',
+        'avatar_url': PHOTO_PLACEHOLDER_URL,
     },
     {
         'username': 'marina_art', 'first_name': 'Марина', 'last_name': 'Казакова',
@@ -49,7 +51,7 @@ CREATORS = [
         'bio': 'Иллюстратор детских книг и открыток. Работаю в акварельной и цифровой технике.',
         'specialization': 'Иллюстрация, акварель, детские книги',
         'instagram': 'marina_illustrations', 'telegram': 'marina_art',
-        'avatar_url': 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=200&h=200&fit=crop',
+        'avatar_url': PHOTO_PLACEHOLDER_URL,
     },
     {
         'username': 'dmitry_video', 'first_name': 'Дмитрий', 'last_name': 'Козлов',
@@ -58,7 +60,7 @@ CREATORS = [
         'bio': 'Видеограф и режиссёр монтажа. Свадебное кино, рекламные ролики, клипы.',
         'specialization': 'Видеосъёмка, монтаж, аэросъёмка',
         'instagram': 'dmitry_films', 'telegram': 'dmitry_video',
-        'avatar_url': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop',
+        'avatar_url': PHOTO_PLACEHOLDER_URL,
     },
     {
         'username': 'olga_photo', 'first_name': 'Ольга', 'last_name': 'Белова',
@@ -67,7 +69,7 @@ CREATORS = [
         'bio': 'Семейный и детский фотограф. Создаю тёплые воспоминания на всю жизнь.',
         'specialization': 'Семейная и детская фотография',
         'instagram': 'olga_family_photo', 'telegram': 'olga_photo',
-        'avatar_url': 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop',
+        'avatar_url': PHOTO_PLACEHOLDER_URL,
     },
     {
         'username': 'alexei_brand', 'first_name': 'Алексей', 'last_name': 'Новиков',
@@ -76,95 +78,95 @@ CREATORS = [
         'bio': 'UX/UI дизайнер и бренд-стратег. Помогаю стартапам создать сильную визуальную идентичность.',
         'specialization': 'UX/UI дизайн, веб-интерфейсы, брендинг',
         'instagram': 'alexei_brand', 'telegram': 'alexei_ux',
-        'avatar_url': 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&h=200&fit=crop',
+        'avatar_url': PHOTO_PLACEHOLDER_URL,
     },
 ]
 
 WORK_DATA = [
     # Свадьбы
     {'title': 'Свадьба на закате', 'creator': 'anna_foto', 'cat': 'weddings',
-     'url': 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=600&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Нежная свадьба на берегу озера в золотой час.', 'year': 2024, 'tags': ['свадьба', 'закат']},
     {'title': 'Первый танец', 'creator': 'anna_foto', 'cat': 'weddings',
-     'url': 'https://images.unsplash.com/photo-1529636798458-92182e662485?w=800&h=1000&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Трогательный момент первого танца молодожёнов.', 'year': 2024, 'tags': ['свадьба', 'эмоции']},
     {'title': 'Цветочная церемония', 'creator': 'anna_foto', 'cat': 'weddings',
-     'url': 'https://images.unsplash.com/photo-1511285560929-80b456503681?w=800&h=600&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Пышная флористика и белоснежные лепестки.', 'year': 2023, 'tags': ['свадьба', 'цветы']},
     {'title': 'Лесная свадьба', 'creator': 'olga_photo', 'cat': 'weddings',
-     'url': 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=800&h=1100&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Уютная боho-свадьба в сосновом лесу.', 'year': 2024, 'tags': ['свадьба', 'природа']},
     {'title': 'Городская свадьба', 'creator': 'olga_photo', 'cat': 'weddings',
-     'url': 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=800&h=600&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Стильная свадьба в центре города.', 'year': 2023, 'tags': ['свадьба', 'город']},
     # Портрет
     {'title': 'Женский портрет', 'creator': 'anna_foto', 'cat': 'portrait',
-     'url': 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800&h=1100&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Мягкий естественный свет, минималистичный фон.', 'year': 2024, 'tags': ['портрет', 'женщина']},
     {'title': 'Мужской портрет', 'creator': 'igor_photo', 'cat': 'portrait',
-     'url': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=1000&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Студийный портрет с драматическим светом.', 'year': 2024, 'tags': ['портрет', 'студия']},
     {'title': 'Детский портрет', 'creator': 'olga_photo', 'cat': 'portrait',
-     'url': 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=800&h=1000&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Живые детские эмоции в естественной среде.', 'year': 2023, 'tags': ['портрет', 'дети']},
     {'title': 'Семейный портрет', 'creator': 'olga_photo', 'cat': 'portrait',
-     'url': 'https://images.unsplash.com/photo-1511895426328-dc8714191011?w=800&h=600&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Счастливая семья в осеннем парке.', 'year': 2024, 'tags': ['портрет', 'семья']},
     # Пейзаж
     {'title': 'Закат над Байкалом', 'creator': 'pavel_lens', 'cat': 'landscape',
-     'url': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Невероятный закат над великим озером.', 'year': 2024, 'tags': ['пейзаж', 'озеро', 'закат']},
     {'title': 'Горные вершины', 'creator': 'pavel_lens', 'cat': 'landscape',
-     'url': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Рассвет в горах Алтая.', 'year': 2024, 'tags': ['пейзаж', 'горы']},
     {'title': 'Берёзовый лес', 'creator': 'pavel_lens', 'cat': 'landscape',
-     'url': 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=800&h=1000&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Туманное утро в берёзовой роще.', 'year': 2023, 'tags': ['пейзаж', 'лес']},
     {'title': 'Зимняя Москва', 'creator': 'anna_foto', 'cat': 'landscape',
-     'url': 'https://images.unsplash.com/photo-1513326738677-b964603b136d?w=800&h=600&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Снежная Москва в ночных огнях.', 'year': 2024, 'tags': ['пейзаж', 'город', 'зима']},
     # Графический дизайн
     {'title': 'Фирменный стиль Café Nord', 'creator': 'ekaterina_design', 'cat': 'graphic',
-     'url': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Разработка полного брендбука для скандинавского кафе.', 'year': 2024, 'tags': ['брендинг', 'кафе']},
     {'title': 'Логотип TechStart', 'creator': 'ekaterina_design', 'cat': 'graphic',
-     'url': 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=800&h=600&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Минималистичный логотип для IT-стартапа.', 'year': 2024, 'tags': ['логотип', 'IT']},
     {'title': 'Дизайн упаковки', 'creator': 'ekaterina_design', 'cat': 'graphic',
-     'url': 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=800&h=800&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Экологичная упаковка для линейки косметики.', 'year': 2023, 'tags': ['упаковка', 'экология']},
     {'title': 'UI Kit мобильного приложения', 'creator': 'alexei_brand', 'cat': 'graphic',
-     'url': 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=600&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Полный UI Kit для фитнес-приложения.', 'year': 2024, 'tags': ['UI', 'мобильный']},
     {'title': 'Дизайн-система StartFlow', 'creator': 'alexei_brand', 'cat': 'graphic',
-     'url': 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&h=600&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Масштабируемая дизайн-система для SaaS-платформы.', 'year': 2024, 'tags': ['дизайн-система', 'SaaS']},
     # Коммерческая
     {'title': 'Предметная съёмка часов', 'creator': 'igor_photo', 'cat': 'commercial',
-     'url': 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=800&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Рекламная съёмка премиальных часов.', 'year': 2024, 'tags': ['предметная', 'часы']},
     {'title': 'Еда для ресторана', 'creator': 'igor_photo', 'cat': 'commercial',
-     'url': 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=600&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Аппетитная фуд-съёмка для меню ресторана.', 'year': 2024, 'tags': ['еда', 'ресторан']},
     {'title': 'Корпоративные портреты', 'creator': 'igor_photo', 'cat': 'commercial',
-     'url': 'https://images.unsplash.com/photo-1560472355-536de3962603?w=800&h=600&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Деловые портреты команды для сайта компании.', 'year': 2023, 'tags': ['корпоративная', 'бизнес']},
     {'title': 'Рекламная кампания', 'creator': 'anna_foto', 'cat': 'commercial',
-     'url': 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Съёмка для рекламной кампании бренда одежды.', 'year': 2024, 'tags': ['реклама', 'мода']},
     # Иллюстрации
     {'title': 'Детская книга «Лесные друзья»', 'creator': 'marina_art', 'cat': 'graphic',
-     'url': 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&h=600&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Иллюстрации акварелью для детской книги.', 'year': 2024, 'tags': ['иллюстрация', 'акварель']},
     {'title': 'Открытки к Новому году', 'creator': 'marina_art', 'cat': 'graphic',
-     'url': 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800&h=600&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Серия праздничных открыток с авторскими иллюстрациями.', 'year': 2023, 'tags': ['открытка', 'праздник']},
     # Видео (представлено как постеры)
     {'title': 'Свадебный фильм', 'creator': 'dmitry_video', 'cat': 'weddings',
-     'url': 'https://images.unsplash.com/photo-1524824267900-2b13413b8634?w=800&h=600&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Кинематографичный свадебный фильм в 4K.', 'year': 2024, 'tags': ['видео', 'свадьба']},
     {'title': 'Рекламный ролик', 'creator': 'dmitry_video', 'cat': 'commercial',
-     'url': 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&h=600&fit=crop',
+     'url': PHOTO_PLACEHOLDER_URL,
      'desc': 'Атмосферный рекламный ролик для ресторана.', 'year': 2024, 'tags': ['видео', 'реклама']},
 ]
 
@@ -272,6 +274,13 @@ class Command(BaseCommand):
                     'is_featured': True,
                 }
             )
+            w.description = wd.get('desc', '')
+            w.image_url = wd['url']
+            w.category = cat
+            w.year = wd.get('year')
+            w.is_published = True
+            w.is_featured = True
+            w.save()
             for tname in wd.get('tags', []):
                 if tname in tag_objs:
                     w.tags.add(tag_objs[tname])
