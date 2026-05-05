@@ -29,9 +29,14 @@
 
   <div class="container">
     <div id="map"></div>
-    <p style="color:var(--muted);font-size:0.78rem;margin-top:8px;text-align:right">
-      <i class="bi bi-info-circle me-1"></i>Нажмите на маркер, чтобы увидеть профиль специалиста
-    </p>
+    <div class="d-flex justify-content-between flex-wrap gap-2 mt-2">
+      <p style="color:var(--muted);font-size:0.78rem;margin:0">
+        <i class="bi bi-info-circle me-1"></i>Нажмите на маркер, чтобы увидеть профиль специалиста
+      </p>
+      <p style="color:var(--muted);font-size:0.72rem;margin:0;text-align:right">
+        Leaflet | © OpenStreetMap contributors
+      </p>
+    </div>
   </div>
 </div>
 {% endblock %}
