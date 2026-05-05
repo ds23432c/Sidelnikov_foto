@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+{% block title %}{{ creator.get_full_name|default:creator.username }} — Folio{% endblock %}
+
+{% block content %}
+<!-- Profile Header -->
+<div class="profile-header">
+  <div class="container">
+    <div class="d-flex flex-column flex-md-row align-items-center align-items-md-start gap-4">
+      {% if creator.get_avatar %}
+        <img src="{{ creator.get_avatar }}" alt="{{ creator.username }}" class="profile-avatar">
+      {% else %}
+        <div class="profile-avatar-placeholder"><i class="bi bi-person"></i></div>
+      {% endif %}
+
+      <div class="flex-grow-1">
+        <div class="d-flex align-items-center gap-3 mb-1 flex-wrap">
+          <h1 class="profile-name mb-0">{{ creator.get_full_name|default:creator.username }}</h1>
+          {% if creator.is_verified %}
+            <div class="verified-badge"><i class="bi bi-patch-check-fill me-1"></i>Верифицирован</div>
+          {% endif %}
+        </div>
+        {% if creator.get_creator_type_display_ru %}
+          <div class="profile-spec">{{ creator.get_creator_type_display_ru }}{% if creator.specialization %} · {{ creator.specialization }}{% endif %}</div>
+        {% endif %}
+        {% if creator.city %}
+          <div class="profile-city"><i class="bi bi-geo-alt me-1"></i>{{ creator.city }}</div>
+        {% endif %}
+        {% if creator.bio %}
+          <p style="color:var(--muted);font-size:0.92rem;max-width:600px;margin-top:12px;line-height:1.7">{{ creator.bio }}</p>
+        {% endif %}
+
+        <!-- Статистика -->
+        <div class="profile-stats">
+          <div class="stat-item">
+            <span class="stat-num">{{ creator.works_count }}</span>
+            <span class="stat-label">Работ</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num followers-count">{{ creator.followers_count }}</span>
+            <span class="stat-label">Подписчиков</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">{{ total_likes }}</span>
+            <span class="stat-label">Лайков</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">{{ creator.views_count }}</span>
+            <span class="stat-label">Просмотров</span>
+          </div>
+        </div>
+
+        <!-- Соцсети -->
+        <div class="profile-socials">
+          {% if creator.instagram %}
+            <a href="https://instagram.com/{{ creator.instagram }}" class="social-link" target="_blank" title="Instagram">
+              <i class="bi bi-instagram"></i>
+            </a>
+          {% endif %}
+          {% if creator.telegram %}
+            <a href="https://t.me/{{ creator.telegram }}" class="social-link" target="_blank" title="Telegram">
+              <i class="bi bi-telegram"></i>
+            </a>
+          {% endif %}
+          {% if creator.website %}
+            <a href="{{ creator.website }}" class="social-link" target="_blank" title="Сайт">
+              <i class="bi bi-globe"></i>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Кнопки действий -->
+      <div class="d-flex flex-column gap-2 flex-shrink-0">
+        {% if user.is_authenticated and user != creator %}
+          <button class="follow-btn {% if is_following %}btn btn-accent{% else %}btn btn-ghost{% endif %}"
+                  data-url="/accounts/u/{{ creator.username }}/follow/">
+            {% if is_following %}
+              <i class="bi bi-person-check-fill me-1"></i>Вы подписаны
+            {% else %}
+              <i class="bi bi-person-plus me-1"></i>Подписаться
+            {% endif %}
+          </button>
+          <a href="/messages/start/{{ creator.username }}/" class="btn btn-ghost">
+            <i class="bi bi-chat me-1"></i>Написать
+          </a>
+          <a href="/orders/create/{{ creator.username }}/" class="btn btn-outline-accent">
+            <i class="bi bi-briefcase me-1"></i>Заказать
+          </a>
+        {% elif user == creator %}
+          <a href="/accounts/edit/" class="btn btn-ghost">
+            <i class="bi bi-pencil me-1"></i>Редактировать
+          </a>
+          <a href="/work/create/" class="btn btn-accent">
+            <i class="bi bi-plus-circle me-1"></i>Добавить работу
+          </a>
+        {% else %}
+          <a href="/accounts/login/" class="btn btn-accent">
+            <i class="bi bi-person me-1"></i>Войти для связи
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Вкладки -->
+<div class="container">
+  <ul class="nav profile-tabs mt-0" id="profileTabs">
+    <li class="nav-item">
+      <a class="nav-link active" data-bs-toggle="tab" href="#tab-works">
+        <i class="bi bi-grid-3x3 me-1"></i>Работы <span style="color:var(--muted)">({{ works|length }})</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" href="#tab-albums">
+        <i class="bi bi-collection me-1"></i>Альбомы
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" href="#tab-services">
+        <i class="bi bi-briefcase me-1"></i>Услуги
+      </a>
+    </li>
+  </ul>
+
+  <div class="tab-content mt-4">
+    <!-- Работы -->
+    <div class="tab-pane fade show active" id="tab-works">
+      {% if works %}
+        <div class="masonry-grid">
+          {% for work in works %}
+            <div class="masonry-item">
+              <a href="/work/{{ work.pk }}/" class="work-card">
+                {% if work.get_image %}
+                  <img src="{{ work.get_image }}" alt="{{ work.title }}" loading="lazy">
+                {% else %}
+                  <div style="height:200px;background:var(--bg3);display:flex;align-items:center;justify-content:center">
+                    <i class="bi bi-image" style="font-size:3rem;color:var(--muted)"></i>
+                  </div>
+                {% endif %}
+                <div class="work-card-overlay">
+                  <div class="work-card-info">
+                    <div class="work-card-title">{{ work.title }}</div>
+                    <div class="work-card-meta">
+                      <span><i class="bi bi-heart-fill"></i> {{ work.likes_count }}</span>
+                      <span><i class="bi bi-eye"></i> {{ work.views_count }}</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="text-center py-5" style="color:var(--muted)">
+          <i class="bi bi-camera" style="font-size:3rem;display:block;margin-bottom:16px"></i>
+          <p>Работ пока нет</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Альбомы -->
+    <div class="tab-pane fade" id="tab-albums">
+      {% if albums %}
+        <div class="row g-3">
+          {% for album in albums %}
+            <div class="col-md-4">
+              <div class="card p-3">
+                {% if album.cover and album.cover.get_image %}
+                  <img src="{{ album.cover.get_image }}" alt="{{ album.title }}" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:12px">
+                {% endif %}
+                <h5 style="font-size:1rem;margin-bottom:4px">{{ album.title }}</h5>
+                <p style="color:var(--muted);font-size:0.85rem;margin:0">{{ album.description|default:"" }}</p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="text-center py-5" style="color:var(--muted)">
+          <i class="bi bi-collection" style="font-size:3rem;display:block;margin-bottom:16px"></i>
+          <p>Альбомов пока нет</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Услуги -->
+    <div class="tab-pane fade" id="tab-services">
+      {% if services %}
+        <div class="row g-3">
+          {% for service in services %}
+            <div class="col-md-6 col-lg-4">
+              <div class="service-card">
+                <h5 style="font-size:1rem;margin-bottom:8px">{{ service.title }}</h5>
+                <p style="color:var(--muted);font-size:0.85rem;margin-bottom:16px">{{ service.description }}</p>
+                <div class="d-flex align-items-center justify-content-between">
+                  <div>
+                    <span class="service-price">от {{ service.price_from }} ₽</span>
+                    {% if service.price_to %}<span style="color:var(--muted);font-size:0.85rem"> до {{ service.price_to }} ₽</span>{% endif %}
+                  </div>
+                  <div class="service-days"><i class="bi bi-clock me-1"></i>{{ service.delivery_days }} дн.</div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        {% if user.is_authenticated and user != creator %}
+          <div class="text-center mt-4">
+            <a href="/orders/create/{{ creator.username }}/" class="btn btn-accent btn-lg">
+              <i class="bi bi-briefcase me-2"></i>Отправить заявку
+            </a>
+          </div>
+        {% endif %}
+      {% else %}
+        <div class="text-center py-5" style="color:var(--muted)">
+          <i class="bi bi-briefcase" style="font-size:3rem;display:block;margin-bottom:16px"></i>
+          <p>Услуги не указаны</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

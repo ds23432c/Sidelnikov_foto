@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Карта специалистов — Folio{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid" style="padding-top:24px">
+  <div class="container mb-3">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+      <div>
+        <h1 style="font-size:1.8rem;margin-bottom:4px">
+          <i class="bi bi-map me-2 text-accent"></i>Карта специалистов
+        </h1>
+        <p style="color:var(--muted);margin:0;font-size:0.9rem">Найдите специалиста в вашем городе</p>
+      </div>
+      <div class="d-flex gap-2 align-items-center">
+        <select id="type-filter" class="form-select form-select-sm" style="width:200px">
+          <option value="">Все специалисты</option>
+          <option value="photographer">Фотографы</option>
+          <option value="designer">Дизайнеры</option>
+          <option value="illustrator">Иллюстраторы</option>
+          <option value="videographer">Видеографы</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="map"></div>
+    <p style="color:var(--muted);font-size:0.78rem;margin-top:8px;text-align:right">
+      <i class="bi bi-info-circle me-1"></i>Нажмите на маркер, чтобы увидеть профиль специалиста
+    </p>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    window.initCreatorsMap();
+  });
+</script>
+{% endblock %}

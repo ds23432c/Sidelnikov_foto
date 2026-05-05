@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Пользователи — Администрирование{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top:40px">
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="/admin-panel/" style="color:var(--muted)"><i class="bi bi-arrow-left"></i></a>
+    <h1 style="font-size:1.8rem;margin-bottom:0">Пользователи</h1>
+  </div>
+
+  <div class="card" style="overflow:auto">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Пользователь</th>
+          <th>Роль</th>
+          <th>Город</th>
+          <th>Дата регистрации</th>
+          <th>Верифицирован</th>
+          <th>Активен</th>
+          <th>Действия</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+          <tr>
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                {% if u.get_avatar %}
+                  <img src="{{ u.get_avatar }}" style="width:32px;height:32px;border-radius:50%;object-fit:cover" alt="">
+                {% else %}
+                  <div style="width:32px;height:32px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center">
+                    <i class="bi bi-person" style="color:var(--muted);font-size:0.8rem"></i>
+                  </div>
+                {% endif %}
+                <div>
+                  <a href="/accounts/u/{{ u.username }}/" style="color:var(--text);font-weight:600;font-size:0.9rem">{{ u.username }}</a>
+                  <div style="font-size:0.78rem;color:var(--muted)">{{ u.email }}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span style="font-size:0.82rem">{{ u.get_role_display }}</span>
+              {% if u.creator_type %}<div style="font-size:0.75rem;color:var(--accent)">{{ u.get_creator_type_display_ru }}</div>{% endif %}
+            </td>
+            <td style="color:var(--muted);font-size:0.85rem">{{ u.city|default:"—" }}</td>
+            <td style="color:var(--muted);font-size:0.82rem">{{ u.date_joined|date:"d.m.Y" }}</td>
+            <td class="toggle-indicator">
+              {% if u.is_verified %}
+                <span class="text-success"><i class="bi bi-check-circle-fill"></i></span>
+              {% else %}
+                <span class="text-muted"><i class="bi bi-x-circle"></i></span>
+              {% endif %}
+            </td>
+            <td>
+              {% if u.is_active %}
+                <span class="text-success"><i class="bi bi-check-circle-fill"></i></span>
+              {% else %}
+                <span class="text-danger"><i class="bi bi-x-circle-fill"></i></span>
+              {% endif %}
+            </td>
+            <td>
+              <div class="d-flex gap-2">
+                <button class="btn btn-ghost btn-sm"
+                        data-toggle-url="/admin-panel/users/{{ u.pk }}/verified/"
+                        title="Верификация">
+                  {% if u.is_verified %}Снять верификацию{% else %}Верифицировать{% endif %}
+                </button>
+                <button class="btn {% if u.is_active %}btn-danger-ghost{% else %}btn-ghost{% endif %} btn-sm"
+                        data-toggle-url="/admin-panel/users/{{ u.pk }}/active/"
+                        title="Активность">
+                  {% if u.is_active %}Заблокировать{% else %}Разблокировать{% endif %}
+                </button>
+              </div>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="7" style="text-align:center;color:var(--muted);padding:40px">Нет пользователей</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

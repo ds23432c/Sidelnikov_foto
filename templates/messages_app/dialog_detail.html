@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}Чат с {{ other.get_full_name|default:other.username }} — Folio{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top:24px;max-width:800px">
+
+  <!-- Шапка чата -->
+  <div class="card p-3 mb-3 d-flex flex-row align-items-center gap-3">
+    <a href="/messages/" style="color:var(--muted);font-size:1.2rem;line-height:1"><i class="bi bi-arrow-left"></i></a>
+    {% if other.get_avatar %}
+      <img src="{{ other.get_avatar }}" style="width:44px;height:44px;border-radius:50%;object-fit:cover" alt="">
+    {% else %}
+      <div style="width:44px;height:44px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center">
+        <i class="bi bi-person" style="color:var(--muted)"></i>
+      </div>
+    {% endif %}
+    <div class="flex-grow-1">
+      <div style="font-weight:600">{{ other.get_full_name|default:other.username }}</div>
+      <div style="font-size:0.8rem;color:var(--accent)">{{ other.get_creator_type_display_ru|default:"Пользователь" }}</div>
+    </div>
+    <a href="/accounts/u/{{ other.username }}/" class="btn btn-ghost btn-sm">Профиль</a>
+  </div>
+
+  <!-- Сообщения -->
+  <div class="card" style="overflow:hidden">
+    <div id="chat-container" class="chat-container">
+      {% for msg in messages %}
+        {% if msg.sender == user %}
+          <!-- Моё сообщение -->
+          <div class="d-flex justify-content-end">
+            <div class="bubble bubble-mine">
+              {% if msg.text %}<span>{{ msg.text }}</span>{% endif %}
+              {% if msg.get_image %}
+                <img src="{{ msg.get_image }}" style="max-width:220px;border-radius:8px;display:block;margin-top:6px" alt="">
+              {% endif %}
+              <small class="bubble-time" style="text-align:right">{{ msg.created_at|date:"H:i" }}</small>
+            </div>
+          </div>
+        {% else %}
+          <!-- Чужое сообщение -->
+          <div class="d-flex justify-content-start gap-2 align-items-end">
+            {% if msg.sender.get_avatar %}
+              <img src="{{ msg.sender.get_avatar }}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;flex-shrink:0" alt="">
+            {% else %}
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <i class="bi bi-person" style="font-size:0.7rem;color:var(--muted)"></i>
+              </div>
+            {% endif %}
+            <div class="bubble bubble-other">
+              {% if msg.text %}<span>{{ msg.text }}</span>{% endif %}
+              {% if msg.get_image %}
+                <img src="{{ msg.get_image }}" style="max-width:220px;border-radius:8px;display:block;margin-top:6px" alt="">
+              {% endif %}
+              <small class="bubble-time">{{ msg.created_at|date:"H:i" }}</small>
+            </div>
+          </div>
+        {% endif %}
+      {% empty %}
+        <div class="text-center py-5" style="color:var(--muted)">
+          <i class="bi bi-chat-dots" style="font-size:2.5rem;display:block;margin-bottom:12px;opacity:0.3"></i>
+          <p style="font-size:0.9rem">Начните разговор</p>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Форма отправки -->
+    <div class="chat-input-area">
+      <form id="message-form" data-url="/messages/{{ dialog.pk }}/send/" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="d-flex gap-2 align-items-end">
+          <div class="flex-grow-1">
+            <textarea name="text" class="form-control" rows="2"
+                      placeholder="Написать сообщение..."
+                      style="resize:none"
+                      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();this.closest('form').dispatchEvent(new Event('submit'))}"></textarea>
+          </div>
+          <div class="d-flex flex-column gap-2">
+            <label class="btn btn-ghost btn-sm" style="cursor:pointer;margin:0" title="Прикрепить фото">
+              <i class="bi bi-paperclip"></i>
+              <input type="file" name="image" accept="image/*" style="display:none" onchange="this.closest('label').title=this.files[0]?.name||'Фото'">
+            </label>
+            <button type="submit" class="btn btn-accent btn-sm">
+              <i class="bi bi-send-fill"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

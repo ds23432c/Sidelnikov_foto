@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Модерация работ — Администрирование{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top:40px">
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="/admin-panel/" style="color:var(--muted)"><i class="bi bi-arrow-left"></i></a>
+    <h1 style="font-size:1.8rem;margin-bottom:0">Модерация работ</h1>
+  </div>
+
+  <div class="card" style="overflow:auto">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Работа</th>
+          <th>Автор</th>
+          <th>Категория</th>
+          <th>Лайки</th>
+          <th>Просмотры</th>
+          <th>Статус</th>
+          <th>Действие</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for work in works %}
+          <tr>
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                {% if work.get_image %}
+                  <img src="{{ work.get_image }}" style="width:48px;height:36px;object-fit:cover;border-radius:6px" alt="">
+                {% endif %}
+                <a href="/work/{{ work.pk }}/" style="color:var(--text);font-weight:600;font-size:0.9rem">{{ work.title|truncatechars:35 }}</a>
+              </div>
+            </td>
+            <td>
+              <a href="/accounts/u/{{ work.creator.username }}/" style="color:var(--muted);font-size:0.85rem">{{ work.creator.username }}</a>
+            </td>
+            <td style="color:var(--muted);font-size:0.85rem">{{ work.category.name|default:"—" }}</td>
+            <td style="font-size:0.9rem">{{ work.likes_count }}</td>
+            <td style="font-size:0.9rem">{{ work.views_count }}</td>
+            <td class="toggle-indicator">
+              {% if work.is_published %}
+                <span class="text-success"><i class="bi bi-check-circle-fill"></i></span>
+              {% else %}
+                <span class="text-muted"><i class="bi bi-x-circle"></i></span>
+              {% endif %}
+            </td>
+            <td>
+              <button class="btn {% if work.is_published %}btn-danger-ghost{% else %}btn-ghost{% endif %} btn-sm"
+                      data-toggle-url="/admin-panel/works/{{ work.pk }}/published/">
+                {% if work.is_published %}Скрыть{% else %}Опубликовать{% endif %}
+              </button>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="7" style="text-align:center;color:var(--muted);padding:40px">Работ нет</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

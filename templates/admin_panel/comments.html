@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Модерация комментариев — Администрирование{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top:40px">
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="/admin-panel/" style="color:var(--muted)"><i class="bi bi-arrow-left"></i></a>
+    <h1 style="font-size:1.8rem;margin-bottom:0">Модерация комментариев</h1>
+  </div>
+
+  <div class="card" style="overflow:auto">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Пользователь</th>
+          <th>Работа</th>
+          <th>Комментарий</th>
+          <th>Дата</th>
+          <th>Статус</th>
+          <th>Действие</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for comment in comments %}
+          <tr>
+            <td>
+              <a href="/accounts/u/{{ comment.user.username }}/" style="color:var(--text);font-size:0.9rem;font-weight:600">{{ comment.user.username }}</a>
+            </td>
+            <td>
+              <a href="/work/{{ comment.work.pk }}/" style="color:var(--muted);font-size:0.85rem">{{ comment.work.title|truncatechars:30 }}</a>
+            </td>
+            <td style="font-size:0.88rem;max-width:300px">{{ comment.text|truncatechars:80 }}</td>
+            <td style="color:var(--muted);font-size:0.8rem">{{ comment.created_at|date:"d.m.Y H:i" }}</td>
+            <td class="toggle-indicator">
+              {% if comment.is_approved %}
+                <span class="text-success"><i class="bi bi-check-circle-fill"></i></span>
+              {% else %}
+                <span class="text-muted"><i class="bi bi-x-circle"></i></span>
+              {% endif %}
+            </td>
+            <td>
+              <button class="btn {% if comment.is_approved %}btn-danger-ghost{% else %}btn-ghost{% endif %} btn-sm"
+                      data-toggle-url="/admin-panel/comments/{{ comment.pk }}/approved/">
+                {% if comment.is_approved %}Скрыть{% else %}Одобрить{% endif %}
+              </button>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:40px">Комментариев нет</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

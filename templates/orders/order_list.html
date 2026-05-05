@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %}Заявки — Folio{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top:40px">
+  <h1 style="font-size:1.8rem;margin-bottom:32px">
+    <i class="bi bi-briefcase me-2 text-accent"></i>Заявки
+  </h1>
+
+  <ul class="nav profile-tabs mb-4">
+    {% if orders_in %}
+      <li class="nav-item">
+        <a class="nav-link active" data-bs-toggle="tab" href="#incoming">
+          <i class="bi bi-inbox me-1"></i>Входящие <span style="color:var(--muted)">({{ orders_in|length }})</span>
+        </a>
+      </li>
+    {% endif %}
+    <li class="nav-item">
+      <a class="nav-link {% if not orders_in %}active{% endif %}" data-bs-toggle="tab" href="#outgoing">
+        <i class="bi bi-send me-1"></i>Исходящие <span style="color:var(--muted)">({{ orders_out|length }})</span>
+      </a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    {% if orders_in %}
+    <div class="tab-pane fade show active" id="incoming">
+      {% for order in orders_in %}
+        <div class="card p-4 mb-3">
+          <div class="d-flex align-items-start justify-content-between gap-3 flex-wrap">
+            <div>
+              <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                <strong>{{ order.project_type }}</strong>
+                <span class="status-badge bg-{{ order.get_status_color }} {% if order.get_status_color == 'warning' or order.get_status_color == 'success' %}text-dark{% else %}text-white{% endif %}">
+                  {{ order.get_status_display }}
+                </span>
+              </div>
+              <p style="color:var(--muted);font-size:0.85rem;margin-bottom:8px">
+                <i class="bi bi-person me-1"></i>{{ order.client.get_full_name|default:order.client.username }}
+                &nbsp;·&nbsp; {{ order.created_at|date:"d.m.Y" }}
+                {% if order.budget %}&nbsp;·&nbsp; Бюджет: {{ order.budget }}{% endif %}
+              </p>
+              <p style="font-size:0.9rem;margin-bottom:8px">{{ order.description|truncatewords:40 }}</p>
+              <div style="font-size:0.82rem;color:var(--muted)">
+                <i class="bi bi-envelope me-1"></i>{{ order.contact_email }}
+                {% if order.contact_phone %} &nbsp;·&nbsp; <i class="bi bi-phone me-1"></i>{{ order.contact_phone }}{% endif %}
+              </div>
+            </div>
+            <form method="post" action="/orders/{{ order.pk }}/status/" class="flex-shrink-0">
+              {% csrf_token %}
+              <select name="status" class="form-select form-select-sm mb-2" style="width:170px">
+                <option value="new" {% if order.status == 'new' %}selected{% endif %}>Новая</option>
+                <option value="discussing" {% if order.status == 'discussing' %}selected{% endif %}>Обсуждается</option>
+                <option value="accepted" {% if order.status == 'accepted' %}selected{% endif %}>Принята</option>
+                <option value="completed" {% if order.status == 'completed' %}selected{% endif %}>Выполнена</option>
+                <option value="rejected" {% if order.status == 'rejected' %}selected{% endif %}>Отклонена</option>
+              </select>
+              <button type="submit" class="btn btn-ghost btn-sm w-100">Обновить</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="tab-pane fade {% if not orders_in %}show active{% endif %}" id="outgoing">
+      {% if orders_out %}
+        {% for order in orders_out %}
+          <div class="card p-4 mb-3">
+            <div class="d-flex align-items-center justify-content-between gap-3">
+              <div>
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <strong>{{ order.project_type }}</strong>
+                  <span class="status-badge bg-{{ order.get_status_color }} {% if order.get_status_color == 'warning' or order.get_status_color == 'success' %}text-dark{% else %}text-white{% endif %}">
+                    {{ order.get_status_display }}
+                  </span>
+                </div>
+                <p style="color:var(--muted);font-size:0.85rem;margin-bottom:4px">
+                  Исполнитель: <a href="/accounts/u/{{ order.creator.username }}/" style="color:var(--text)">{{ order.creator.get_full_name|default:order.creator.username }}</a>
+                  &nbsp;·&nbsp; {{ order.created_at|date:"d.m.Y" }}
+                </p>
+                <p style="font-size:0.9rem;margin:0">{{ order.description|truncatewords:30 }}</p>
+              </div>
+              <a href="/messages/start/{{ order.creator.username }}/" class="btn btn-ghost btn-sm flex-shrink-0">
+                <i class="bi bi-chat me-1"></i>Написать
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="text-center py-5" style="color:var(--muted)">
+          <i class="bi bi-send" style="font-size:3rem;display:block;margin-bottom:16px;opacity:0.3"></i>
+          <p>Исходящих заявок нет</p>
+          <a href="/" class="btn btn-ghost mt-2">Найти специалиста</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

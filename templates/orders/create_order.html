@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Отправить заявку — Folio{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top:60px;max-width:650px">
+  <!-- Карточка исполнителя -->
+  <div class="card p-4 mb-4 d-flex flex-row align-items-center gap-3">
+    {% if creator.get_avatar %}
+      <img src="{{ creator.get_avatar }}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid var(--accent)" alt="">
+    {% else %}
+      <div style="width:60px;height:60px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;border:2px solid var(--border)">
+        <i class="bi bi-person" style="font-size:1.5rem;color:var(--muted)"></i>
+      </div>
+    {% endif %}
+    <div>
+      <div style="font-weight:600;font-size:1rem">{{ creator.get_full_name|default:creator.username }}</div>
+      <div style="color:var(--accent);font-size:0.85rem">{{ creator.get_creator_type_display_ru }}</div>
+      {% if creator.city %}<div style="color:var(--muted);font-size:0.82rem"><i class="bi bi-geo-alt me-1"></i>{{ creator.city }}</div>{% endif %}
+    </div>
+  </div>
+
+  <h1 style="font-size:1.6rem;margin-bottom:8px">Отправить заявку</h1>
+  <p style="color:var(--muted);margin-bottom:28px">Опишите ваш проект — специалист свяжется с вами</p>
+
+  <div class="card p-4">
+    <form method="post">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <div class="d-flex gap-3 mt-4">
+        <button type="submit" class="btn btn-accent">
+          <i class="bi bi-send me-1"></i>Отправить заявку
+        </button>
+        <a href="/accounts/u/{{ creator.username }}/" class="btn btn-ghost">Отмена</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

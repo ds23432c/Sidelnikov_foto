@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% block title %}Личный кабинет — Folio{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top:40px">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h1 style="font-size:1.8rem;margin-bottom:0">Личный кабинет</h1>
+    <div class="d-flex gap-2">
+      {% if user.role == 'creator' %}
+        <a href="/work/create/" class="btn btn-accent btn-sm">
+          <i class="bi bi-plus-circle me-1"></i>Добавить работу
+        </a>
+        <a href="/orders/services/create/" class="btn btn-ghost btn-sm">
+          <i class="bi bi-briefcase me-1"></i>Добавить услугу
+        </a>
+      {% endif %}
+      <a href="/accounts/edit/" class="btn btn-ghost btn-sm">
+        <i class="bi bi-pencil me-1"></i>Редактировать профиль
+      </a>
+    </div>
+  </div>
+
+  <!-- Вкладки -->
+  <ul class="nav profile-tabs" id="cabinetTabs">
+    {% if user.role == 'creator' %}
+      <li class="nav-item">
+        <a class="nav-link active" data-bs-toggle="tab" href="#tab-myworks">
+          <i class="bi bi-grid-3x3 me-1"></i>Мои работы <span style="color:var(--muted)">({{ works|length }})</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="tab" href="#tab-orders-in">
+          <i class="bi bi-inbox me-1"></i>Входящие заявки <span style="color:var(--muted)">({{ orders_in|length }})</span>
+        </a>
+      </li>
+    {% endif %}
+    <li class="nav-item">
+      <a class="nav-link {% if user.role != 'creator' %}active{% endif %}" data-bs-toggle="tab" href="#tab-orders-out">
+        <i class="bi bi-send me-1"></i>Мои заявки <span style="color:var(--muted)">({{ orders_out|length }})</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-bs-toggle="tab" href="#tab-feed">
+        <i class="bi bi-rss me-1"></i>Лента подписок
+      </a>
+    </li>
+  </ul>
+
+  <div class="tab-content mt-4">
+
+    <!-- Мои работы -->
+    {% if user.role == 'creator' %}
+    <div class="tab-pane fade show active" id="tab-myworks">
+      {% if works %}
+        <div class="row g-3">
+          {% for work in works %}
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="card" style="overflow:hidden">
+                {% if work.get_image %}
+                  <img src="{{ work.get_image }}" alt="{{ work.title }}" style="width:100%;height:150px;object-fit:cover">
+                {% else %}
+                  <div style="height:150px;background:var(--bg3);display:flex;align-items:center;justify-content:center">
+                    <i class="bi bi-image" style="font-size:2rem;color:var(--muted)"></i>
+                  </div>
+                {% endif %}
+                <div class="p-3">
+                  <div class="d-flex align-items-start justify-content-between gap-2">
+                    <div>
+                      <a href="/work/{{ work.pk }}/" style="color:var(--text);font-weight:600;font-size:0.9rem;display:block;margin-bottom:4px">{{ work.title }}</a>
+                      <div style="font-size:0.78rem;color:var(--muted);display:flex;gap:8px">
+                        <span><i class="bi bi-heart-fill text-accent"></i> {{ work.likes_count }}</span>
+                        <span><i class="bi bi-eye"></i> {{ work.views_count }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="d-flex gap-2 mt-3">
+                    <a href="/work/{{ work.pk }}/edit/" class="btn btn-ghost btn-sm flex-grow-1">
+                      <i class="bi bi-pencil"></i>
+                    </a>
+                    <a href="/work/{{ work.pk }}/delete/" class="btn btn-danger-ghost btn-sm flex-grow-1">
+                      <i class="bi bi-trash"></i>
+                    </a>
+                  </div>
+                  {% if not work.is_published %}
+                    <span class="badge bg-secondary mt-2" style="font-size:0.72rem">Скрыто</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="text-center py-5" style="color:var(--muted)">
+          <i class="bi bi-camera" style="font-size:3rem;display:block;margin-bottom:16px"></i>
+          <p>У вас пока нет работ</p>
+          <a href="/work/create/" class="btn btn-accent mt-2">Добавить первую работу</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Входящие заявки -->
+    <div class="tab-pane fade" id="tab-orders-in">
+      {% if orders_in %}
+        {% for order in orders_in %}
+          <div class="card p-4 mb-3">
+            <div class="d-flex align-items-start justify-content-between gap-3">
+              <div>
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <strong>{{ order.project_type }}</strong>
+                  <span class="status-badge bg-{{ order.get_status_color }} {% if order.get_status_color == 'warning' or order.get_status_color == 'success' %}text-dark{% else %}text-white{% endif %}">
+                    {{ order.get_status_display }}
+                  </span>
+                </div>
+                <p style="color:var(--muted);font-size:0.85rem;margin-bottom:8px">
+                  <i class="bi bi-person me-1"></i>{{ order.client.get_full_name|default:order.client.username }}
+                  &nbsp;·&nbsp; <i class="bi bi-calendar me-1"></i>{{ order.created_at|date:"d.m.Y" }}
+                  {% if order.budget %}&nbsp;·&nbsp; <i class="bi bi-currency-dollar me-1"></i>{{ order.budget }}{% endif %}
+                </p>
+                <p style="font-size:0.9rem;margin-bottom:8px">{{ order.description|truncatewords:30 }}</p>
+                <small style="color:var(--muted)">
+                  <i class="bi bi-envelope me-1"></i>{{ order.contact_email }}
+                  {% if order.contact_phone %} &nbsp;·&nbsp; <i class="bi bi-phone me-1"></i>{{ order.contact_phone }}{% endif %}
+                </small>
+              </div>
+              <form method="post" action="/orders/{{ order.pk }}/status/" class="flex-shrink-0">
+                {% csrf_token %}
+                <select name="status" class="form-select form-select-sm mb-2" style="width:160px">
+                  <option value="new" {% if order.status == 'new' %}selected{% endif %}>Новая</option>
+                  <option value="discussing" {% if order.status == 'discussing' %}selected{% endif %}>Обсуждается</option>
+                  <option value="accepted" {% if order.status == 'accepted' %}selected{% endif %}>Принята</option>
+                  <option value="completed" {% if order.status == 'completed' %}selected{% endif %}>Выполнена</option>
+                  <option value="rejected" {% if order.status == 'rejected' %}selected{% endif %}>Отклонена</option>
+                </select>
+                <button type="submit" class="btn btn-ghost btn-sm w-100">Обновить статус</button>
+              </form>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="text-center py-5" style="color:var(--muted)">
+          <i class="bi bi-inbox" style="font-size:3rem;display:block;margin-bottom:16px"></i>
+          <p>Входящих заявок пока нет</p>
+        </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Мои заявки -->
+    <div class="tab-pane fade {% if user.role != 'creator' %}show active{% endif %}" id="tab-orders-out">
+      {% if orders_out %}
+        {% for order in orders_out %}
+          <div class="card p-4 mb-3">
+            <div class="d-flex align-items-center justify-content-between gap-3">
+              <div>
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <strong>{{ order.project_type }}</strong>
+                  <span class="status-badge bg-{{ order.get_status_color }} {% if order.get_status_color == 'warning' or order.get_status_color == 'success' %}text-dark{% else %}text-white{% endif %}">
+                    {{ order.get_status_display }}
+                  </span>
+                </div>
+                <p style="color:var(--muted);font-size:0.85rem;margin-bottom:4px">
+                  Исполнитель: <a href="/accounts/u/{{ order.creator.username }}/">{{ order.creator.get_full_name|default:order.creator.username }}</a>
+                  &nbsp;·&nbsp; {{ order.created_at|date:"d.m.Y" }}
+                </p>
+                <p style="font-size:0.9rem;margin:0">{{ order.description|truncatewords:25 }}</p>
+              </div>
+              <a href="/messages/start/{{ order.creator.username }}/" class="btn btn-ghost btn-sm flex-shrink-0">
+                <i class="bi bi-chat me-1"></i>Написать
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="text-center py-5" style="color:var(--muted)">
+          <i class="bi bi-send" style="font-size:3rem;display:block;margin-bottom:16px"></i>
+          <p>Вы ещё не отправляли заявок</p>
+          <a href="/" class="btn btn-accent mt-2">Найти специалиста</a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Лента подписок -->
+    <div class="tab-pane fade" id="tab-feed">
+      {% if feed_works %}
+        <div class="masonry-grid">
+          {% for work in feed_works %}
+            <div class="masonry-item">
+              <a href="/work/{{ work.pk }}/" class="work-card">
+                {% if work.get_image %}
+                  <img src="{{ work.get_image }}" alt="{{ work.title }}" loading="lazy">
+                {% else %}
+                  <div style="height:200px;background:var(--bg3);display:flex;align-items:center;justify-content:center">
+                    <i class="bi bi-image" style="font-size:3rem;color:var(--muted)"></i>
+                  </div>
+                {% endif %}
+                <div class="work-card-overlay">
+                  <div class="work-card-info">
+                    <div class="work-card-title">{{ work.title }}</div>
+                    <div class="work-card-meta">
+                      <span><i class="bi bi-person"></i> {{ work.creator.get_full_name|default:work.creator.username }}</span>
+                      <span><i class="bi bi-heart-fill"></i> {{ work.likes_count }}</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="text-center py-5" style="color:var(--muted)">
+          <i class="bi bi-rss" style="font-size:3rem;display:block;margin-bottom:16px"></i>
+          <p>Подпишитесь на авторов, чтобы видеть их работы здесь</p>
+          <a href="/" class="btn btn-ghost mt-2">Перейти к галерее</a>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Сообщения — Folio{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top:40px;max-width:700px">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h1 style="font-size:1.8rem;margin-bottom:0">
+      <i class="bi bi-chat-dots me-2 text-accent"></i>Сообщения
+    </h1>
+  </div>
+
+  {% if dialog_data %}
+    {% for item in dialog_data %}
+      <a href="/messages/{{ item.dialog.pk }}/" class="dialog-item text-decoration-none">
+        {% if item.other and item.other.get_avatar %}
+          <img src="{{ item.other.get_avatar }}" class="dialog-avatar" alt="">
+        {% else %}
+          <div class="dialog-avatar-ph">
+            <i class="bi bi-person" style="font-size:1.3rem"></i>
+          </div>
+        {% endif %}
+        <div class="flex-grow-1 min-width-0">
+          <div class="d-flex align-items-center justify-content-between gap-2">
+            <span class="dialog-name">{{ item.other.get_full_name|default:item.other.username|default:"Неизвестно" }}</span>
+            <div class="d-flex align-items-center gap-2 flex-shrink-0">
+              {% if item.last %}
+                <span class="dialog-time">{{ item.last.created_at|date:"d.m H:i" }}</span>
+              {% endif %}
+              {% if item.unread %}
+                <span class="nav-badge">{{ item.unread }}</span>
+              {% endif %}
+            </div>
+          </div>
+          <div class="dialog-preview">
+            {% if item.last %}
+              {% if item.last.sender == user %}<span style="color:var(--muted)">Вы: </span>{% endif %}
+              {{ item.last.text|default:"[Фото]"|truncatechars:60 }}
+            {% else %}
+              <span style="color:var(--muted)">Нет сообщений</span>
+            {% endif %}
+          </div>
+        </div>
+      </a>
+    {% endfor %}
+  {% else %}
+    <div class="text-center py-5" style="color:var(--muted)">
+      <i class="bi bi-chat-dots" style="font-size:3.5rem;display:block;margin-bottom:16px;opacity:0.3"></i>
+      <h4 style="color:var(--text)">Нет диалогов</h4>
+      <p style="font-size:0.9rem">Начните общение, написав кому-нибудь с профиля</p>
+      <a href="/" class="btn btn-ghost mt-2">Перейти к галерее</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

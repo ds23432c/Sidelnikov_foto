@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Уведомления — Folio{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top:40px;max-width:700px">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h1 style="font-size:1.8rem;margin-bottom:0">
+      <i class="bi bi-bell me-2 text-accent"></i>Уведомления
+    </h1>
+    {% if notifications %}
+      <button id="mark-all-read" class="btn btn-ghost btn-sm">
+        <i class="bi bi-check-all me-1"></i>Прочитать все
+      </button>
+    {% endif %}
+  </div>
+
+  {% if notifications %}
+    {% for notif in notifications %}
+      <div class="notification-item {% if not notif.is_read %}unread{% endif %} mb-2">
+        <div class="notification-icon">
+          <i class="bi {{ notif.get_icon }}"></i>
+        </div>
+        <div class="flex-grow-1">
+          <div class="d-flex align-items-start justify-content-between gap-2">
+            <div>
+              {% if notif.sender %}
+                <span style="font-weight:600;font-size:0.9rem">
+                  <a href="/accounts/u/{{ notif.sender.username }}/" style="color:var(--text)">{{ notif.sender.username }}</a>
+                </span>
+              {% endif %}
+              <span style="font-size:0.9rem;color:var(--muted)"> {{ notif.text }}</span>
+              {% if notif.work %}
+                <div style="margin-top:4px">
+                  <a href="/work/{{ notif.work.pk }}/" style="font-size:0.82rem;color:var(--accent)">
+                    <i class="bi bi-image me-1"></i>{{ notif.work.title }}
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+            <small style="color:var(--muted);white-space:nowrap;font-size:0.78rem">{{ notif.created_at|date:"d.m H:i" }}</small>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="text-center py-5" style="color:var(--muted)">
+      <i class="bi bi-bell-slash" style="font-size:3.5rem;display:block;margin-bottom:16px;opacity:0.3"></i>
+      <h4 style="color:var(--text)">Нет уведомлений</h4>
+      <p style="font-size:0.9rem">Уведомления появятся, когда кто-то оценит ваши работы или напишет вам</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

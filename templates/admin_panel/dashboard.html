@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% block title %}Панель администратора — Folio{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top:40px">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h1 style="font-size:1.8rem;margin-bottom:0">
+      <i class="bi bi-shield-check me-2 text-accent"></i>Панель администратора
+    </h1>
+    <div class="d-flex gap-2">
+      <a href="/admin-panel/users/" class="btn btn-ghost btn-sm">Пользователи</a>
+      <a href="/admin-panel/works/" class="btn btn-ghost btn-sm">Работы</a>
+      <a href="/admin-panel/comments/" class="btn btn-ghost btn-sm">Комментарии</a>
+    </div>
+  </div>
+
+  <!-- Статистика -->
+  <div class="row g-3 mb-5">
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-card-num">{{ stats.users }}</div>
+        <div class="stat-card-label"><i class="bi bi-people me-1"></i>Пользователей</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-card-num">{{ stats.creators }}</div>
+        <div class="stat-card-label"><i class="bi bi-camera me-1"></i>Создателей</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-card-num">{{ stats.works }}</div>
+        <div class="stat-card-label"><i class="bi bi-images me-1"></i>Работ</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-card-num">{{ stats.likes }}</div>
+        <div class="stat-card-label"><i class="bi bi-heart me-1"></i>Лайков</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-card-num">{{ stats.orders }}</div>
+        <div class="stat-card-label"><i class="bi bi-briefcase me-1"></i>Заявок</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-card-num">{{ stats.messages }}</div>
+        <div class="stat-card-label"><i class="bi bi-chat me-1"></i>Сообщений</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-card-num">{{ stats.comments }}</div>
+        <div class="stat-card-label"><i class="bi bi-chat-left me-1"></i>Комментариев</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card">
+        <div class="stat-card-num">{{ stats.published }}</div>
+        <div class="stat-card-label"><i class="bi bi-eye me-1"></i>Опубликовано</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- График -->
+    <div class="col-lg-7">
+      <div class="card p-4">
+        <h4 style="font-size:1rem;margin-bottom:20px">Работы за последние 7 дней</h4>
+        <canvas id="worksChart" height="80"></canvas>
+      </div>
+    </div>
+
+    <!-- Топ создателей -->
+    <div class="col-lg-5">
+      <div class="card p-4">
+        <h4 style="font-size:1rem;margin-bottom:20px">Топ создателей</h4>
+        {% for creator in top_creators %}
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <span style="color:var(--muted);font-size:0.85rem;width:20px">{{ forloop.counter }}</span>
+            {% if creator.get_avatar %}
+              <img src="{{ creator.get_avatar }}" style="width:36px;height:36px;border-radius:50%;object-fit:cover" alt="">
+            {% else %}
+              <div style="width:36px;height:36px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center">
+                <i class="bi bi-person" style="color:var(--muted)"></i>
+              </div>
+            {% endif %}
+            <div class="flex-grow-1">
+              <a href="/accounts/u/{{ creator.username }}/" style="color:var(--text);font-weight:600;font-size:0.9rem">{{ creator.get_full_name|default:creator.username }}</a>
+              <div style="font-size:0.78rem;color:var(--muted)">{{ creator.get_creator_type_display_ru }}</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:0.85rem;font-weight:600">{{ creator.works_count }} <span style="color:var(--muted);font-weight:400">работ</span></div>
+              <div style="font-size:0.78rem;color:var(--muted)">{{ creator.followers_count }} подпис.</div>
+            </div>
+          </div>
+        {% empty %}
+          <p style="color:var(--muted);font-size:0.9rem">Нет данных</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const ctx = document.getElementById('worksChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ days_labels|safe }},
+      datasets: [{
+        label: 'Новых работ',
+        data: {{ days_works|safe }},
+        backgroundColor: 'rgba(245,166,35,0.6)',
+        borderColor: '#F5A623',
+        borderWidth: 1,
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' } },
+        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888', stepSize: 1 }, beginAtZero: true }
+      }
+    }
+  });
+</script>
+{% endblock %}

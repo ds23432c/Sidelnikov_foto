@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% block title %}Folio — Галерея работ{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<div class="hero-section">
+  <div class="container">
+    <h1 class="hero-title">Лучшие работы<br><span style="color:var(--accent)">творческих людей</span></h1>
+    <p class="hero-sub">Находите фотографов, дизайнеров и иллюстраторов для ваших проектов</p>
+    {% if not user.is_authenticated %}
+      <a href="/accounts/register/" class="btn btn-accent btn-lg me-3">Начать бесплатно</a>
+      <a href="/map/" class="btn btn-ghost btn-lg">
+        <i class="bi bi-map me-2"></i>Карта специалистов
+      </a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="container" style="padding-top:40px">
+
+  <!-- Фильтры -->
+  <div class="filter-bar">
+    <a href="/" class="filter-chip {% if not selected_category and not selected_type and not selected_city and not search %}active{% endif %}">
+      Все работы
+    </a>
+    {% for cat in categories %}
+      <a href="/?category={{ cat.slug }}{% if selected_type %}&creator_type={{ selected_type }}{% endif %}"
+         class="filter-chip {% if selected_category == cat.slug %}active{% endif %}">
+        <i class="bi {{ cat.icon }} me-1"></i>{{ cat.name }}
+      </a>
+    {% endfor %}
+    <div class="ms-auto d-flex gap-2 flex-wrap">
+      <select class="form-select form-select-sm" style="width:auto;font-size:0.82rem"
+              onchange="window.location='/?{% if selected_category %}category={{ selected_category }}&{% endif %}creator_type='+this.value">
+        <option value="" {% if not selected_type %}selected{% endif %}>Все типы</option>
+        <option value="photographer" {% if selected_type == 'photographer' %}selected{% endif %}>Фотографы</option>
+        <option value="designer" {% if selected_type == 'designer' %}selected{% endif %}>Дизайнеры</option>
+        <option value="illustrator" {% if selected_type == 'illustrator' %}selected{% endif %}>Иллюстраторы</option>
+        <option value="videographer" {% if selected_type == 'videographer' %}selected{% endif %}>Видеографы</option>
+      </select>
+      <form method="get" action="/" class="d-flex gap-2">
+        {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+        {% if selected_type %}<input type="hidden" name="creator_type" value="{{ selected_type }}">{% endif %}
+        <input type="text" name="q" value="{{ search|default:'' }}" placeholder="Поиск..."
+               class="form-control form-control-sm" style="width:200px;font-size:0.82rem">
+        <button type="submit" class="btn btn-ghost btn-sm"><i class="bi bi-search"></i></button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Топ недели -->
+  {% if top_works and not search and not selected_category and not selected_type %}
+    <div class="top-section">
+      <h2 class="section-title"><i class="bi bi-fire text-accent me-2"></i>Топ <span>недели</span></h2>
+      <div class="row g-3">
+        {% for work in top_works %}
+          <div class="col-6 col-md-4 col-lg-2">
+            <a href="/work/{{ work.pk }}/" class="work-card d-block" style="border-radius:10px;overflow:hidden">
+              {% if work.get_image %}
+                <img src="{{ work.get_image }}" alt="{{ work.title }}" style="width:100%;height:140px;object-fit:cover">
+              {% endif %}
+              <div class="work-card-overlay">
+                <div class="work-card-info">
+                  <div class="work-card-title" style="font-size:0.85rem">{{ work.title }}</div>
+                  <div class="work-card-meta">
+                    <span><i class="bi bi-heart-fill"></i> {{ work.likes_count }}</span>
+                    <span><i class="bi bi-eye"></i> {{ work.views_count }}</span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Новые таланты -->
+  {% if new_creators and not search and not selected_category and not selected_type %}
+    <div class="mb-4">
+      <h2 class="section-title mb-3"><i class="bi bi-stars text-accent me-2"></i>Новые <span>таланты</span></h2>
+      <div class="row g-3">
+        {% for creator in new_creators %}
+          <div class="col-6 col-md-4 col-lg-2">
+            <a href="/accounts/u/{{ creator.username }}/" class="creator-card d-block text-decoration-none">
+              {% if creator.get_avatar %}
+                <img src="{{ creator.get_avatar }}" alt="{{ creator.username }}" class="creator-card-avatar">
+              {% else %}
+                <div class="creator-card-avatar-ph"><i class="bi bi-person"></i></div>
+              {% endif %}
+              <div class="creator-card-name">{{ creator.get_full_name|default:creator.username }}</div>
+              <div class="creator-card-type">{{ creator.get_creator_type_display_ru }}</div>
+              {% if creator.city %}<div class="creator-card-city"><i class="bi bi-geo-alt me-1"></i>{{ creator.city }}</div>{% endif %}
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Галерея работ -->
+  <div class="mb-3 d-flex align-items-center justify-content-between">
+    <h2 class="section-title mb-0">
+      {% if search %}Результаты: «{{ search }}»
+      {% elif selected_category %}{{ categories|dictsort:"slug" }}
+      {% else %}Все <span>работы</span>{% endif %}
+    </h2>
+    <span style="color:var(--muted);font-size:0.85rem">{{ works.paginator.count }} работ</span>
+  </div>
+
+  {% if works %}
+    <div class="masonry-grid">
+      {% for work in works %}
+        <div class="masonry-item">
+          <a href="/work/{{ work.pk }}/" class="work-card">
+            {% if work.get_image %}
+              <img src="{{ work.get_image }}" alt="{{ work.title }}" loading="lazy">
+            {% else %}
+              <div style="height:200px;background:var(--bg3);display:flex;align-items:center;justify-content:center">
+                <i class="bi bi-image" style="font-size:3rem;color:var(--muted)"></i>
+              </div>
+            {% endif %}
+            <div class="work-card-overlay">
+              <div class="work-card-info">
+                <div class="work-card-title">{{ work.title }}</div>
+                <div class="work-card-meta">
+                  <span><i class="bi bi-person"></i> {{ work.creator.get_full_name|default:work.creator.username }}</span>
+                  <span><i class="bi bi-heart-fill"></i> {{ work.likes_count }}</span>
+                  <span><i class="bi bi-eye"></i> {{ work.views_count }}</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Пагинация -->
+    {% if works.has_other_pages %}
+      <div class="d-flex justify-content-center mt-5">
+        <nav>
+          <ul class="pagination">
+            {% if works.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ works.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_type %}&creator_type={{ selected_type }}{% endif %}{% if search %}&q={{ search }}{% endif %}">
+                  <i class="bi bi-chevron-left"></i>
+                </a>
+              </li>
+            {% endif %}
+            {% for num in works.paginator.page_range %}
+              {% if num == works.number %}
+                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+              {% elif num > works.number|add:'-3' and num < works.number|add:'3' %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ num }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_type %}&creator_type={{ selected_type }}{% endif %}{% if search %}&q={{ search }}{% endif %}">{{ num }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+            {% if works.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ works.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_type %}&creator_type={{ selected_type }}{% endif %}{% if search %}&q={{ search }}{% endif %}">
+                  <i class="bi bi-chevron-right"></i>
+                </a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    {% endif %}
+
+  {% else %}
+    <div class="text-center py-5" style="color:var(--muted)">
+      <i class="bi bi-search" style="font-size:3rem;display:block;margin-bottom:16px"></i>
+      <p>Работы не найдены. Попробуйте изменить фильтры.</p>
+      <a href="/" class="btn btn-ghost mt-2">Сбросить фильтры</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
