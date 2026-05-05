@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Свадебная фотография">
+  <rect width="800" height="600" fill="#f9f3ef"/>
+  <rect x="32" y="32" width="736" height="536" rx="28" fill="#ffffff" stroke="#111111" stroke-width="10"/>
+  <circle cx="220" cy="185" r="72" fill="#f5a623" opacity="0.25" stroke="#111111" stroke-width="8"/>
+  <circle cx="580" cy="185" r="72" fill="#f5a623" opacity="0.25" stroke="#111111" stroke-width="8"/>
+  <path d="M310 340c22-34 48-52 90-52s68 18 90 52" fill="none" stroke="#111111" stroke-width="12" stroke-linecap="round"/>
+  <path d="M310 340c-18 70 2 126 90 126s108-56 90-126" fill="#f5a623" opacity="0.18" stroke="#111111" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M340 318l60-56 60 56-60 72z" fill="#ffffff" stroke="#111111" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M356 462h88" stroke="#111111" stroke-width="10" stroke-linecap="round"/>
+  <text x="400" y="530" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="700" fill="#111111">СВАДЕБНАЯ ЗАГЛУШКА</text>
+</svg>

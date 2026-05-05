@@ -55,6 +55,6 @@ class ProfileEditForm(forms.ModelForm):
         }
         widgets = {
             'bio': forms.Textarea(attrs={'rows': 4}),
-            'latitude': forms.NumberInput(attrs={'step': '0.000001', 'placeholder': '55.7558'}),
-            'longitude': forms.NumberInput(attrs={'step': '0.000001', 'placeholder': '37.6173'}),
+            'latitude': forms.HiddenInput(),
+            'longitude': forms.HiddenInput(),
         }
