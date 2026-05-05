@@ -18,28 +18,33 @@ class Command(BaseCommand):
                 'email': email,
                 'is_staff': True,
                 'is_superuser': True,
+                'is_active': True,
             },
         )
 
-        if created:
-            user.set_password(password)
-            user.save(update_fields=['password'])
-            self.stdout.write(self.style.SUCCESS(f'Superuser "{username}" created.'))
-            return
+        changed = created
 
-        updated_fields = []
-        if email and user.email != email:
+        if user.email != email:
             user.email = email
-            updated_fields.append('email')
+            changed = True
         if not user.is_staff:
             user.is_staff = True
-            updated_fields.append('is_staff')
+            changed = True
         if not user.is_superuser:
             user.is_superuser = True
-            updated_fields.append('is_superuser')
+            changed = True
+        if not user.is_active:
+            user.is_active = True
+            changed = True
 
-        if updated_fields:
-            user.save(update_fields=updated_fields)
-            self.stdout.write(self.style.SUCCESS(f'Superuser "{username}" updated.'))
+        user.set_password(password)
+        changed = True
+
+        if changed:
+            user.save()
+            if created:
+                self.stdout.write(self.style.SUCCESS(f'Superuser "{username}" created.'))
+            else:
+                self.stdout.write(self.style.SUCCESS(f'Superuser "{username}" updated.'))
         else:
             self.stdout.write(self.style.SUCCESS(f'Superuser "{username}" already exists.'))
