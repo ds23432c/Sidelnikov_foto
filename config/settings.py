@@ -11,14 +11,15 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-sidelnikov-foto-dev-k
 
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS_ENV = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,.railway.app,.up.railway.app,healthcheck.railway.app')
-ALLOWED_HOSTS = [h.strip() for h in ALLOWED_HOSTS_ENV.split(',') if h.strip()]
+ALLOWED_HOSTS = [h.strip() for h in os.environ.get('ALLOWED_HOSTS', '').split(',') if h.strip()]
+for host in ['localhost', '127.0.0.1', '.railway.app', '.up.railway.app', 'healthcheck.railway.app']:
+    if host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(host)
 
-CSRF_TRUSTED_ORIGINS_ENV = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
-if CSRF_TRUSTED_ORIGINS_ENV:
-    CSRF_TRUSTED_ORIGINS = [o.strip() for o in CSRF_TRUSTED_ORIGINS_ENV.split(',')]
-else:
-    CSRF_TRUSTED_ORIGINS = ['https://*.railway.app']
+CSRF_TRUSTED_ORIGINS = [o.strip() for o in os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',') if o.strip()]
+for origin in ['https://*.railway.app', 'https://*.up.railway.app', 'https://healthcheck.railway.app']:
+    if origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(origin)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
