@@ -2,7 +2,7 @@
 {% block title %}Личный кабинет — Folio{% endblock %}
 
 {% block content %}
-<div class="container" style="padding-top:40px">
+<div class="container cabinet-page" style="padding-top:40px">
   <div class="d-flex align-items-center justify-content-between mb-4">
     <h1 style="font-size:1.8rem;margin-bottom:0">Личный кабинет</h1>
     <div class="d-flex gap-2">
@@ -25,18 +25,18 @@
     {% if user.role == 'creator' %}
       <li class="nav-item">
         <a class="nav-link active" data-bs-toggle="tab" href="#tab-myworks">
-          <i class="bi bi-grid-3x3 me-1"></i>Мои работы <span style="color:var(--muted)">({{ works|length }})</span>
+          <i class="bi bi-grid-3x3 me-1"></i>Мои работы <span style="color:var(--text)">({{ works|length }})</span>
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" data-bs-toggle="tab" href="#tab-orders-in">
-          <i class="bi bi-inbox me-1"></i>Входящие заявки <span style="color:var(--muted)">({{ orders_in|length }})</span>
+          <i class="bi bi-inbox me-1"></i>Входящие заявки <span style="color:var(--text)">({{ orders_in|length }})</span>
         </a>
       </li>
     {% endif %}
     <li class="nav-item">
       <a class="nav-link {% if user.role != 'creator' %}active{% endif %}" data-bs-toggle="tab" href="#tab-orders-out">
-        <i class="bi bi-send me-1"></i>Мои заявки <span style="color:var(--muted)">({{ orders_out|length }})</span>
+        <i class="bi bi-send me-1"></i>Мои заявки <span style="color:var(--text)">({{ orders_out|length }})</span>
       </a>
     </li>
     <li class="nav-item">
@@ -67,7 +67,7 @@
                   <div class="d-flex align-items-start justify-content-between gap-2">
                     <div>
                       <a href="/work/{{ work.pk }}/" style="color:var(--text);font-weight:600;font-size:0.9rem;display:block;margin-bottom:4px">{{ work.title }}</a>
-                      <div style="font-size:0.78rem;color:var(--muted);display:flex;gap:8px">
+                      <div style="font-size:0.78rem;color:var(--text);display:flex;gap:8px">
                         <span><i class="bi bi-heart-fill text-accent"></i> {{ work.likes_count }}</span>
                         <span><i class="bi bi-eye"></i> {{ work.views_count }}</span>
                       </div>
@@ -90,7 +90,7 @@
           {% endfor %}
         </div>
       {% else %}
-        <div class="text-center py-5" style="color:var(--muted)">
+        <div class="text-center py-5" style="color:var(--text)">
           <i class="bi bi-camera" style="font-size:3rem;display:block;margin-bottom:16px"></i>
           <p>У вас пока нет работ</p>
           <a href="/work/create/" class="btn btn-accent mt-2">Добавить первую работу</a>
@@ -111,13 +111,13 @@
                     {{ order.get_status_display }}
                   </span>
                 </div>
-                <p style="color:var(--muted);font-size:0.85rem;margin-bottom:8px">
+                <p style="color:var(--text);font-size:0.85rem;margin-bottom:8px">
                   <i class="bi bi-person me-1"></i>{{ order.client.get_full_name|default:order.client.username }}
                   &nbsp;·&nbsp; <i class="bi bi-calendar me-1"></i>{{ order.created_at|date:"d.m.Y" }}
                   {% if order.budget %}&nbsp;·&nbsp; <i class="bi bi-currency-dollar me-1"></i>{{ order.budget }}{% endif %}
                 </p>
                 <p style="font-size:0.9rem;margin-bottom:8px">{{ order.description|truncatewords:30 }}</p>
-                <small style="color:var(--muted)">
+                <small style="color:var(--text)">
                   <i class="bi bi-envelope me-1"></i>{{ order.contact_email }}
                   {% if order.contact_phone %} &nbsp;·&nbsp; <i class="bi bi-phone me-1"></i>{{ order.contact_phone }}{% endif %}
                 </small>
@@ -137,7 +137,7 @@
           </div>
         {% endfor %}
       {% else %}
-        <div class="text-center py-5" style="color:var(--muted)">
+        <div class="text-center py-5" style="color:var(--text)">
           <i class="bi bi-inbox" style="font-size:3rem;display:block;margin-bottom:16px"></i>
           <p>Входящих заявок пока нет</p>
         </div>
@@ -154,11 +154,11 @@
               <div>
                 <div class="d-flex align-items-center gap-2 mb-2">
                   <strong>{{ order.project_type }}</strong>
-                  <span class="status-badge bg-{{ order.get_status_color }} {% if order.get_status_color == 'warning' or order.get_status_color == 'success' %}text-dark{% else %}text-white{% endif %}">
+                  <span class="status-badge bg-{{ order.get_status_color }} text-dark">
                     {{ order.get_status_display }}
                   </span>
                 </div>
-                <p style="color:var(--muted);font-size:0.85rem;margin-bottom:4px">
+                <p style="color:var(--text);font-size:0.85rem;margin-bottom:4px">
                   Исполнитель: <a href="/accounts/u/{{ order.creator.username }}/">{{ order.creator.get_full_name|default:order.creator.username }}</a>
                   &nbsp;·&nbsp; {{ order.created_at|date:"d.m.Y" }}
                 </p>
@@ -171,7 +171,7 @@
           </div>
         {% endfor %}
       {% else %}
-        <div class="text-center py-5" style="color:var(--muted)">
+        <div class="text-center py-5" style="color:var(--text)">
           <i class="bi bi-send" style="font-size:3rem;display:block;margin-bottom:16px"></i>
           <p>Вы ещё не отправляли заявок</p>
           <a href="/" class="btn btn-accent mt-2">Найти специалиста</a>
@@ -207,7 +207,7 @@
           {% endfor %}
         </div>
       {% else %}
-        <div class="text-center py-5" style="color:var(--muted)">
+        <div class="text-center py-5" style="color:var(--text)">
           <i class="bi bi-rss" style="font-size:3rem;display:block;margin-bottom:16px"></i>
           <p>Подпишитесь на авторов, чтобы видеть их работы здесь</p>
           <a href="/" class="btn btn-ghost mt-2">Перейти к галерее</a>

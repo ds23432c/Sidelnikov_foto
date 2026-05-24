@@ -630,6 +630,49 @@ a:hover { color: var(--accent-dark); }
   -webkit-text-fill-color: var(--text) !important;
 }
 
+/* ====== ЛИЧНЫЙ КАБИНЕТ ====== */
+.cabinet-page,
+.cabinet-page * {
+  color: var(--text) !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: var(--text) !important;
+}
+
+.cabinet-page h1,
+.cabinet-page .profile-tabs .nav-link,
+.cabinet-page .card strong,
+.cabinet-page .card p,
+.cabinet-page .card small,
+.cabinet-page .card span,
+.cabinet-page .card a,
+.cabinet-page .card div,
+.cabinet-page .card i,
+.cabinet-page .nav-link span {
+  color: var(--text) !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: var(--text) !important;
+}
+
+.cabinet-page .profile-tabs .nav-link {
+  opacity: 1 !important;
+}
+
+.cabinet-page .profile-tabs .nav-link.active {
+  color: var(--accent) !important;
+  -webkit-text-fill-color: var(--accent) !important;
+}
+
+.cabinet-page .card [style*="color:var(--muted)"],
+.cabinet-page [style*="color:var(--muted)"] {
+  color: var(--text) !important;
+  -webkit-text-fill-color: var(--text) !important;
+}
+
+.cabinet-page .status-badge {
+  color: #000 !important;
+  -webkit-text-fill-color: #000 !important;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .profile-stats { gap: 20px; }
