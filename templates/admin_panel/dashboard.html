@@ -4,12 +4,13 @@
 {% block extra_head %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-  body { margin: 0; }
-  .admin-wrapper { display: flex; min-height: 100vh; }
-  .admin-main { margin-left: 0; }
-  @media (max-width: 768px) {
-    .admin-sidebar { width: 100%; height: auto; position: relative; }
-    .admin-main { margin-left: 0; }
+  body { margin: 0; padding: 0; }
+  .navbar { display: none; }
+  .admin-wrapper { display: flex; flex-direction: column; min-height: 100vh; width: 100%; }
+  .admin-main { margin-left: 0; width: 100%; }
+  @media (min-width: 769px) {
+    .admin-wrapper { flex-direction: row; }
+    .admin-main { margin-left: 280px; width: calc(100% - 280px); }
   }
 </style>
 {% endblock %}
@@ -60,7 +61,7 @@
       <div class="admin-header-subtitle">Добро пожаловать обратно! Вот статистика вашей платформы</div>
     </div>
 
-    <div class="container-xl" style="padding: 0 40px; max-width: 100%; width: 100%">
+    <div class="container-xl" style="padding: 0 40px; max-width: 100%; width: 100%;">
       <!-- STATISTICS CARDS -->
       <div class="row g-4 mb-5">
         <div class="col-6 col-md-4 col-lg-3">

@@ -1,6 +1,19 @@
 {% extends 'base.html' %}
 {% block title %}Модерация комментариев — Администрирование{% endblock %}
 
+{% block extra_head %}
+<style>
+  body { margin: 0; padding: 0; }
+  .navbar { display: none; }
+  .admin-wrapper { display: flex; flex-direction: column; min-height: 100vh; width: 100%; }
+  .admin-main { margin-left: 0; width: 100%; }
+  @media (min-width: 769px) {
+    .admin-wrapper { flex-direction: row; }
+    .admin-main { margin-left: 280px; width: calc(100% - 280px); }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="admin-wrapper">
   <!-- SIDEBAR -->
