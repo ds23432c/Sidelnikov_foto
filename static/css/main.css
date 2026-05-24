@@ -564,34 +564,30 @@ a:hover { color: var(--accent-dark); }
 @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
 /* ====== РЕГИСТРАЦИЯ ====== */
-.register-page__intro h2,
-.register-page__intro p,
-.register-page__login,
-.register-page__login a {
-  color: var(--text);
-}
-
-.register-page__intro p {
-  color: var(--text);
-}
-
-.register-page__card .form-label,
-.register-page__card label,
-.register-page__card .helptext,
-.register-page__card ul,
-.register-page__card li {
+.register-page,
+.register-page * {
   color: var(--text) !important;
 }
 
+.register-page .btn-accent,
+.register-page .btn-accent:hover {
+  color: #000 !important;
+}
+
+.register-page .form-control,
+.register-page .form-select {
+  color: var(--text) !important;
+}
+
+.register-page .form-control::placeholder {
+  color: rgba(255,255,255,0.65) !important;
+}
+
 .register-page__card .helptext,
+.register-page__card .form-text,
+.register-page__card .errorlist,
 .register-page__card ul {
-  opacity: 0.85;
-}
-
-.register-page__card .text-muted,
-.register-page__card small {
-  color: var(--text) !important;
-  opacity: 0.75;
+  opacity: 1;
 }
 
 /* Responsive */
