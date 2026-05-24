@@ -33,11 +33,11 @@
               </div>
             </td>
             <td>
-              <a href="/accounts/u/{{ work.creator.username }}/" style="color:var(--muted);font-size:0.85rem">{{ work.creator.username }}</a>
+              <a href="/accounts/u/{{ work.creator.username }}/" style="color:var(--text) !important;font-size:0.85rem;font-weight:600">{{ work.creator.username }}</a>
             </td>
-            <td style="color:var(--muted);font-size:0.85rem">{{ work.category.name|default:"—" }}</td>
-            <td style="font-size:0.9rem">{{ work.likes_count }}</td>
-            <td style="font-size:0.9rem">{{ work.views_count }}</td>
+            <td style="color:var(--text) !important;font-size:0.85rem;font-weight:600">{{ work.category.name|default:"—" }}</td>
+            <td style="font-size:0.9rem;color:var(--text) !important;font-weight:700">{{ work.likes_count }}</td>
+            <td style="font-size:0.9rem;color:var(--text) !important;font-weight:700">{{ work.views_count }}</td>
             <td class="toggle-indicator">
               {% if work.is_published %}
                 <span class="text-success"><i class="bi bi-check-circle-fill"></i></span>

@@ -595,13 +595,30 @@ a:hover { color: var(--accent-dark); }
 }
 
 /* ====== АДМИН И ПРОФИЛЬ С ЧИСЛАМИ ====== */
-.stat-card-num,
-.profile-stats .stat-num,
-.admin-table td,
-.admin-table th {
+.stat-card,
+.stat-card *,
+.profile-stats,
+.profile-stats *,
+.admin-table,
+.admin-table * {
   color: var(--text) !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: var(--text) !important;
 }
 
+.admin-table td:not(.toggle-indicator),
+.admin-table td:not(.toggle-indicator) *,
+.admin-table th,
+.admin-table th * {
+  color: var(--text) !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: var(--text) !important;
+}
+
+.profile-stats .stat-num,
+.profile-stats .stat-label,
+.stat-card-num,
+.stat-card-label,
 .admin-panel-number,
 .admin-panel-metric,
 .creator-top-count,
@@ -609,6 +626,8 @@ a:hover { color: var(--accent-dark); }
 .creator-stats-number,
 .creator-stats-label {
   color: var(--text) !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: var(--text) !important;
 }
 
 /* Responsive */
