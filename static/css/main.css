@@ -673,6 +673,44 @@ a:hover { color: var(--accent-dark); }
   -webkit-text-fill-color: #000 !important;
 }
 
+/* ====== ФОРМА РАБОТЫ ====== */
+.work-form-page,
+.work-form-page * {
+  color: var(--text) !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: var(--text) !important;
+}
+
+.work-form-page .form-label,
+.work-form-page label,
+.work-form-page .helptext,
+.work-form-page .form-text,
+.work-form-page .errorlist,
+.work-form-page .errorlist *,
+.work-form-page small,
+.work-form-page p,
+.work-form-page span {
+  color: var(--text) !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: var(--text) !important;
+}
+
+.work-form-page .form-control,
+.work-form-page .form-select {
+  color: var(--text) !important;
+  background: var(--bg3) !important;
+  border-color: var(--border) !important;
+  -webkit-text-fill-color: var(--text) !important;
+}
+
+.work-form-page .form-control::placeholder {
+  color: rgba(255,255,255,0.65) !important;
+}
+
+.work-form-page .btn-ghost {
+  color: var(--text) !important;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .profile-stats { gap: 20px; }

@@ -3,9 +3,9 @@
 {% block title %}{{ title }} — Folio{% endblock %}
 
 {% block content %}
-<div class="container" style="padding-top:60px;max-width:700px">
+<div class="container work-form-page" style="padding-top:60px;max-width:700px">
   <h1 style="font-size:1.8rem;margin-bottom:8px">{{ title }}</h1>
-  <p style="color:var(--muted);margin-bottom:32px">Добавьте изображение файлом или ссылкой</p>
+  <p style="color:var(--text);margin-bottom:32px">Добавьте изображение файлом или ссылкой</p>
   <div class="card p-4">
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
