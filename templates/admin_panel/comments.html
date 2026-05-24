@@ -2,54 +2,96 @@
 {% block title %}Модерация комментариев — Администрирование{% endblock %}
 
 {% block content %}
-<div class="container" style="padding-top:40px">
-  <div class="d-flex align-items-center gap-3 mb-4">
-    <a href="/admin-panel/" style="color:var(--muted)"><i class="bi bi-arrow-left"></i></a>
-    <h1 style="font-size:1.8rem;margin-bottom:0">Модерация комментариев</h1>
-  </div>
+<div class="admin-wrapper">
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+    <div class="admin-logo">
+      <i class="bi bi-shield-check" style="color:var(--accent);font-size:1.4rem"></i>
+      <span>Admin</span>
+    </div>
+    <ul class="admin-nav">
+      <li class="admin-nav-item">
+        <a href="/admin-panel/" class="admin-nav-link">
+          <i class="bi bi-speedometer2"></i>
+          Дашборд
+        </a>
+      </li>
+      <li class="admin-nav-item">
+        <a href="/admin-panel/users/" class="admin-nav-link">
+          <i class="bi bi-people"></i>
+          Пользователи
+        </a>
+      </li>
+      <li class="admin-nav-item">
+        <a href="/admin-panel/works/" class="admin-nav-link">
+          <i class="bi bi-images"></i>
+          Работы
+        </a>
+      </li>
+      <li class="admin-nav-item">
+        <a href="/admin-panel/comments/" class="admin-nav-link active">
+          <i class="bi bi-chat-left-text"></i>
+          Комментарии
+        </a>
+      </li>
+    </ul>
+  </aside>
 
-  <div class="card" style="overflow:auto">
-    <table class="admin-table">
-      <thead>
-        <tr>
-          <th>Пользователь</th>
-          <th>Работа</th>
-          <th>Комментарий</th>
-          <th>Дата</th>
-          <th>Статус</th>
-          <th>Действие</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for comment in comments %}
-          <tr>
-            <td>
-              <a href="/accounts/u/{{ comment.user.username }}/" style="color:var(--text);font-size:0.9rem;font-weight:600">{{ comment.user.username }}</a>
-            </td>
-            <td>
-              <a href="/work/{{ comment.work.pk }}/" style="color:var(--muted);font-size:0.85rem">{{ comment.work.title|truncatechars:30 }}</a>
-            </td>
-            <td style="font-size:0.88rem;max-width:300px">{{ comment.text|truncatechars:80 }}</td>
-            <td style="color:var(--muted);font-size:0.8rem">{{ comment.created_at|date:"d.m.Y H:i" }}</td>
-            <td class="toggle-indicator">
-              {% if comment.is_approved %}
-                <span class="text-success"><i class="bi bi-check-circle-fill"></i></span>
-              {% else %}
-                <span class="text-muted"><i class="bi bi-x-circle"></i></span>
-              {% endif %}
-            </td>
-            <td>
-              <button class="btn {% if comment.is_approved %}btn-danger-ghost{% else %}btn-ghost{% endif %} btn-sm"
-                      data-toggle-url="/admin-panel/comments/{{ comment.pk }}/approved/">
-                {% if comment.is_approved %}Скрыть{% else %}Одобрить{% endif %}
-              </button>
-            </td>
-          </tr>
-        {% empty %}
-          <tr><td colspan="6" style="text-align:center;color:var(--muted);padding:40px">Комментариев нет</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <!-- MAIN CONTENT -->
+  <div class="admin-main">
+    <div class="admin-header">
+      <div class="admin-header-title">
+        <i class="bi bi-chat-left-text"></i>
+        Модерация комментариев
+      </div>
+      <div class="admin-header-subtitle">Проверка и управление комментариями пользователей</div>
+    </div>
+
+    <div class="container-xl" style="padding: 0 40px; max-width: 100%; width: 100%">
+      <div class="card" style="overflow:auto;background:var(--bg2);border-top:3px solid #1abc9c">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Пользователь</th>
+              <th>Работа</th>
+              <th>Комментарий</th>
+              <th>Дата</th>
+              <th>Статус</th>
+              <th>Действие</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for comment in comments %}
+              <tr>
+                <td>
+                  <a href="/accounts/u/{{ comment.user.username }}/" style="color:var(--text);font-size:0.95rem;font-weight:600;text-decoration:none">{{ comment.user.username }}</a>
+                </td>
+                <td>
+                  <a href="/work/{{ comment.work.pk }}/" style="color:rgba(255,255,255,0.7);font-size:0.9rem;text-decoration:none">{{ comment.work.title|truncatechars:30 }}</a>
+                </td>
+                <td style="font-size:0.9rem;max-width:350px;color:rgba(255,255,255,0.8)">{{ comment.text|truncatechars:80 }}</td>
+                <td style="color:rgba(255,255,255,0.6);font-size:0.85rem;white-space:nowrap">{{ comment.created_at|date:"d.m.Y H:i" }}</td>
+                <td class="toggle-indicator">
+                  {% if comment.is_approved %}
+                    <span class="text-success"><i class="bi bi-check-circle-fill"></i></span>
+                  {% else %}
+                    <span class="text-muted"><i class="bi bi-x-circle"></i></span>
+                  {% endif %}
+                </td>
+                <td>
+                  <button class="btn {% if comment.is_approved %}btn-danger-ghost{% else %}btn-ghost{% endif %} btn-sm"
+                          data-toggle-url="/admin-panel/comments/{{ comment.pk }}/approved/">
+                    {% if comment.is_approved %}Скрыть{% else %}Одобрить{% endif %}
+                  </button>
+                </td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="6" style="text-align:center;color:rgba(255,255,255,0.5);padding:40px">Комментариев нет</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}
