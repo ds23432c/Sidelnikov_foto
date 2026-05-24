@@ -563,6 +563,37 @@ a:hover { color: var(--accent-dark); }
 }
 @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
+/* ====== РЕГИСТРАЦИЯ ====== */
+.register-page__intro h2,
+.register-page__intro p,
+.register-page__login,
+.register-page__login a {
+  color: var(--text);
+}
+
+.register-page__intro p {
+  color: var(--text);
+}
+
+.register-page__card .form-label,
+.register-page__card label,
+.register-page__card .helptext,
+.register-page__card ul,
+.register-page__card li {
+  color: var(--text) !important;
+}
+
+.register-page__card .helptext,
+.register-page__card ul {
+  opacity: 0.85;
+}
+
+.register-page__card .text-muted,
+.register-page__card small {
+  color: var(--text) !important;
+  opacity: 0.75;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .profile-stats { gap: 20px; }
