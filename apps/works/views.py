@@ -16,8 +16,10 @@ def home(request):
     creator_type = request.GET.get('creator_type')
     city = request.GET.get('city')
     search = request.GET.get('q')
+    selected_category_obj = None
 
     if category_slug:
+        selected_category_obj = Category.objects.filter(slug=category_slug).first()
         works = works.filter(category__slug=category_slug)
     if creator_type:
         works = works.filter(creator__creator_type=creator_type)
@@ -49,6 +51,7 @@ def home(request):
         'categories': categories,
         'cities': sorted(set(cities)),
         'selected_category': category_slug,
+        'selected_category_obj': selected_category_obj,
         'selected_type': creator_type,
         'selected_city': city,
         'search': search,
