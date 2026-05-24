@@ -520,8 +520,8 @@ a:hover { color: var(--accent-dark); }
   padding: 24px;
   text-align: center;
 }
-.stat-card-num { font-size: 2.5rem; font-weight: 700; font-family: 'Playfair Display', serif; color: var(--accent); }
-.stat-card-label { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+.stat-card-num { font-size: 2.5rem; font-weight: 700; font-family: 'Playfair Display', serif; color: var(--text); }
+.stat-card-label { color: var(--text); font-size: 0.85rem; margin-top: 4px; }
 
 .admin-table { width: 100%; }
 .admin-table th { color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; padding: 10px 14px; border-bottom: 1px solid var(--border); }
@@ -547,10 +547,14 @@ a:hover { color: var(--accent-dark); }
 
 /* ====== УТИЛИТЫ ====== */
 .text-accent { color: var(--accent) !important; }
-.text-muted-custom { color: var(--muted) !important; }
+.text-muted-custom { color: var(--text) !important; }
 .bg-card { background: var(--bg2) !important; }
 .border-custom { border: 1px solid var(--border) !important; }
 .rounded-custom { border-radius: var(--radius) !important; }
+
+[style*="color:var(--muted)"] {
+  color: var(--text) !important;
+}
 
 .divider { border-top: 1px solid var(--border); margin: 24px 0; }
 
@@ -588,6 +592,23 @@ a:hover { color: var(--accent-dark); }
 .register-page__card .errorlist,
 .register-page__card ul {
   opacity: 1;
+}
+
+/* ====== АДМИН И ПРОФИЛЬ С ЧИСЛАМИ ====== */
+.stat-card-num,
+.profile-stats .stat-num,
+.admin-table td,
+.admin-table th {
+  color: var(--text) !important;
+}
+
+.admin-panel-number,
+.admin-panel-metric,
+.creator-top-count,
+.creator-top-meta,
+.creator-stats-number,
+.creator-stats-label {
+  color: var(--text) !important;
 }
 
 /* Responsive */
