@@ -526,11 +526,11 @@ a:hover { color: var(--accent-dark); }
   border-right: 1px solid rgba(245,166,35,0.2);
   position: fixed;
   left: 0;
-  top: 0;
-  height: 100vh;
+  top: 60px;
+  height: calc(100vh - 60px);
   overflow-y: auto;
   padding-top: 20px;
-  z-index: 999;
+  z-index: 500;
   box-shadow: 2px 0 10px rgba(0,0,0,0.3);
 }
 
@@ -598,6 +598,7 @@ a:hover { color: var(--accent-dark); }
   padding-bottom: 40px;
   width: calc(100% - 280px);
   min-height: 100vh;
+  margin-top: 0;
 }
 
 .admin-header {
@@ -803,6 +804,7 @@ a:hover { color: var(--accent-dark); }
 @media (max-width: 1024px) {
   .admin-sidebar {
     width: 240px;
+    height: calc(100vh - 60px);
   }
 
   .admin-main {
@@ -831,8 +833,10 @@ a:hover { color: var(--accent-dark); }
   .admin-sidebar {
     width: 100%;
     height: auto;
-    position: sticky;
-    top: 0;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
     border-right: none;
     border-bottom: 2px solid rgba(245,166,35,0.3);
     display: flex;
@@ -849,6 +853,7 @@ a:hover { color: var(--accent-dark); }
     margin-bottom: 0;
     padding: 16px 20px;
     font-size: 1.1rem;
+    flex-shrink: 0;
   }
 
   .admin-nav {
@@ -888,6 +893,7 @@ a:hover { color: var(--accent-dark); }
 
   .admin-main {
     margin-left: 0;
+    margin-top: 90px;
     width: 100%;
     padding-top: 0;
   }
@@ -977,6 +983,10 @@ a:hover { color: var(--accent-dark); }
 
   .admin-nav-link i {
     font-size: 1.1rem;
+  }
+
+  .admin-main {
+    margin-top: 130px;
   }
 
   .admin-header {
